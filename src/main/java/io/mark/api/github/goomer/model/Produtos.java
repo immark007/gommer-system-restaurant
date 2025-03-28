@@ -15,22 +15,22 @@ public class Produtos {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(name = "id")
     private UUID id;
 
     @Column(name = "foto_url")
     private String fotoURL;
 
-    @Column(name = "nome", nullable = false)
+    @Column(name = "nome")
     private String nome;
 
-    @Column(name = "preço", nullable = false, precision = 10, scale = 2)
+    @Column(name = "preço", precision = 10, scale = 2)
     private BigDecimal preco;
 
-    @Column(name = "categoria", nullable = false)
+    @Column(name = "categoria")
     private String categoria;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurante_id", nullable = false)
+    @JoinColumn(name = "restaurante_id")
     private Restaurante restaurante;
 }
