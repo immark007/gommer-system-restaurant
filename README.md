@@ -103,7 +103,7 @@ POST /usuarios
 - `nome`: Filtra por nome do produto
 - `categoria`: Filtra por categoria (ENTRADA, PRATO_PRINCIPAL, etc.)
 - `precoMin`: Preço mínimo
-- `precoMax`: Preço máximo
+- `precoMax`: Preço máximo 
 - `restauranteId`: Filtra por restaurante
 
 ## 🔒 Segurança
