@@ -1,140 +1,155 @@
-# Goomer - Sistema de Gerenciamento de Restaurantes
+# Goomer System Restaurant - API Documentation
 
-## 📌 Visão Geral
-API completa para gerenciamento de restaurantes desenvolvida com Spring Boot MVC, PostgreSQL e Docker. A aplicação oferece endpoints para gestão de usuários, restaurantes e produtos, com recursos avançados como paginação, filtros e ordenação.
+## Introdução
+O **Goomer System Restaurant** é um sistema de gerenciamento de restaurantes desenvolvido com **Spring Boot** e **PostgreSQL**. A API permite a gestão de usuários, restaurantes e produtos, oferecendo endpoints para criação, edição, busca e remoção de entidades.
 
-## 🚀 Tecnologias
-
-### Principais Tecnologias
+## Tecnologias Utilizadas
 - **Java 21**
-- **Spring Boot 3.4.3** (Web, Data JPA, Validation)
-- **PostgreSQL 16.6** (Dockerizado)
-- **Flyway** (Migrações de banco)
-- **MapStruct** (Mapeamento DTO/Entity)
-- **Spring HATEOAS** (Hipermídia)
-- **Lombok** (Redução de boilerplate)
+- **Spring Boot 3.4.3**
+- **Spring Data JPA**
+- **Spring Security**
+- **PostgreSQL** (via **Docker Compose**)
+- **Flyway** (para migração do banco de dados)
+- **Springdoc OpenAPI** (para documentação da API - ainda precisa ser implementado)
+- **OAuth2 com JWT** (para autenticação - ainda precisa ser implementado)
 
-### Infraestrutura
-- **Docker** (Containerização)
-- **Docker Compose** (Orquestração)
-- **PostgreSQL** (Banco de dados)
+## Configuração do Ambiente
 
-## 🛠️ Configuração do Ambiente
+1. Clone o repositório:
+   ```sh
+   git clone https://github.com/immark007/gommer-system-restaurant.git
+   cd gommer-system-restaurant
+   ```
 
-### Pré-requisitos
-- Docker e Docker Compose instalados
-- Java 21 JDK
-- Maven 3.9+
+2. Suba o banco de dados PostgreSQL com Docker Compose:
+   ```sh
+   docker-compose up -d
+   ```
 
-### 🐳 Executando com Docker Compose
-1. Crie um arquivo `.env` baseado no `.env.example`
-2. Execute os containers:
-```bash
-docker-compose up -d
-```
+3. Execute a aplicação:
+   ```sh
+   mvn spring-boot:run
+   ```
 
-3. Inicie a aplicação:
-```bash
-mvn spring-boot:run
-```
+4. Acesse a documentação da API via Swagger/OpenAPI (ainda precisa ser implementado):
+   ```
+   http://localhost:8080/swagger-ui.html
+   ```
 
-### Configuração do Banco de Dados
-A aplicação está configurada para conectar-se ao PostgreSQL na porta 5440:
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5440/goomer_db
-spring.datasource.username=goomer
-spring.datasource.password=goomer123
-```
+---
 
-## 📚 Documentação da API
+## Endpoints da API
 
-### Endpoints Base
-- **API Base URL:** `http://localhost:8080/api/v1`
-
-### 🔍 Recursos Comuns
-Todos os endpoints de listagem suportam:
-- Paginação: `?page=0&size=10`
-- Ordenação: `?sort=nome,asc`
-- Filtros específicos por entidade
-
-### 👤 Usuários
-| Método | Endpoint            | Descrição                              |
-|--------|---------------------|----------------------------------------|
-| POST   | `/usuarios`         | Cria um novo usuário                   |
-| GET    | `/usuarios`         | Lista usuários (com filtros)           |
-| GET    | `/usuarios/{id}`    | Busca usuário por ID                   |
-| DELETE | `/usuarios/{id}`    | Remove um usuário                      |
-
-**Exemplo de criação:**
+### 1. Usuários
+#### Criar Usuário
+**POST** `/usuarios`
 ```json
-POST /usuarios
 {
-  "email": "proprietario@exemplo.com",
-  "senha": "senhaSegura123",
+  "email": "vertinho69@gmail.com",
+  "senha": "senha123",
   "role": "PROPRIETARY"
 }
 ```
 
-### 🏢 Restaurantes
-| Método | Endpoint               | Descrição                              |
-|--------|------------------------|----------------------------------------|
-| POST   | `/restaurantes`        | Cria novo restaurante                  |
-| GET    | `/restaurantes`        | Lista restaurantes (com filtros)       |
-| GET    | `/restaurantes/{id}`   | Busca restaurante por ID               |
-| PUT    | `/restaurantes/{id}`   | Atualiza restaurante                   |
-| DELETE | `/restaurantes/{id}`   | Remove restaurante                     |
+#### Buscar Usuário por ID
+**GET** `/usuarios/{id}`
 
-**Filtros disponíveis:**
-- `nome`: Filtra por nome do restaurante
-- `cidade`: Filtra por cidade
-- `estado`: Filtra por estado
-- `horario`: Filtra por horário de funcionamento
+#### Deletar Usuário por ID
+**DELETE** `/usuarios/{id}`
 
-### 🍽️ Produtos
-| Método | Endpoint            | Descrição                              |
-|--------|---------------------|----------------------------------------|
-| POST   | `/produtos`         | Cria novo produto                      |
-| GET    | `/produtos`         | Lista produtos (com filtros)           |
-| GET    | `/produtos/{id}`    | Busca produto por ID                   |
-| PUT    | `/produtos/{id}`    | Atualiza produto                       |
-| DELETE | `/produtos/{id}`    | Remove produto                         |
+---
 
-**Filtros disponíveis:**
-- `nome`: Filtra por nome do produto
-- `categoria`: Filtra por categoria (ENTRADA, PRATO_PRINCIPAL, etc.)
-- `precoMin`: Preço mínimo
-- `precoMax`: Preço máximo 
-- `restauranteId`: Filtra por restaurante
+### 2. Restaurantes
+#### Criar Restaurante
+**POST** `/restaurantes`
+```json
+{
+  "fotoURL": "https://www.cnnbrasil.com.br/wp-content/uploads/sites/12/2023/06/230605134133-taco-bell-vegan-crunchwrap-handout.webp",
+  "nome": "Taco Bell",
+  "endereco": {
+    "rua": "Primeira Travessa Maria do Livramento",
+    "numero": "12",
+    "cidade": "Mamanguape",
+    "estado": "PB",
+    "cep": "01010-002"
+  },
+  "horarioFuncionamento": "Seg-Sex: 10h - 22h",
+  "usuarioId": "5aaf4dfd-949b-47b0-a98c-5213d32cc740",
+  "produtos": []
+}
+```
 
-## 🔒 Segurança
-- Autenticação básica implementada
-- Controle de acesso por roles (PROPRIETARY, ADMIN)
-- Endpoints protegidos conforme regras de negócio
+#### Buscar Restaurantes por Parâmetros
+**GET** `/restaurantes/search?nome=Taco&horarioFuncionamento=10:00-22:00`
 
-## 📅 Roadmap
+#### Editar Restaurante
+**PUT** `/restaurantes/{id}`
+```json
+{
+  "fotoURL": "https://nova-imagem.com/foto.jpg",
+  "nome": "Restaurante Atualizado",
+  "endereco": {
+    "rua": "Rua Atualizada",
+    "numero": "123",
+    "cidade": "Cidade Atualizada",
+    "estado": "Estado Atualizado",
+    "cep": "12345-678"
+  },
+  "horarioFuncionamento": "10:00 - 22:00",
+  "usuarioId": "5aaf4dfd-949b-47b0-a98c-5213d32cc740",
+  "produtos": []
+}
+```
 
-### ✅ Implementado
-- CRUD completo para todas entidades
-- Paginação e ordenação em todas listagens
-- Filtros avançados com parâmetros de query
-- Validação de dados
-- Dockerização do ambiente
-- Migrações de banco com Flyway
+#### Buscar Restaurante por ID
+**GET** `/restaurantes/{id}`
 
-### 🚧 Em Desenvolvimento
-- [ ] Documentação Swagger/OpenAPI
-- [ ] Autenticação JWT
-- [ ] Sistema de avaliações
-- [ ] Upload de imagens para Cloud Storage
-- [ ] Cache com Redis
-- [ ] Testes de integração
+---
 
-## 🤝 Como Contribuir
-1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
-3. Commit suas mudanças (`git commit -m 'Adiciona nova feature'`)
-4. Push para a branch (`git push origin feature/nova-feature`)
-5. Abra um Pull Request
+### 3. Produtos
+#### Criar Produto
+**POST** `/produtos`
+```json
+{
+  "fotoURL": "https://meusite.com/produto.jpg",
+  "nome": "Arroz de leite",
+  "preco": 10.00,
+  "categoria": "PF",
+  "restauranteId": "41e383b7-a574-4ed1-93d2-4123a44ce0d5"
+}
+```
 
-## 📄 Licença
-Este projeto está licenciado sob a licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+#### Buscar Produto por ID
+**GET** `/produtos/{id}`
+
+#### Deletar Produto
+**DELETE** `/produtos/{id}`
+
+---
+
+## Autenticação
+O sistema utilizará **OAuth2 com JWT** para autenticação e autorização (ainda precisa ser implementado). O acesso a alguns endpoints exigirá um token JWT válido.
+
+## Banco de Dados
+A aplicação utiliza **PostgreSQL**, com migrações gerenciadas pelo **Flyway**.
+
+O banco de dados roda via **Docker Compose**, e pode ser iniciado com:
+```sh
+docker-compose up -d
+```
+
+## Documentação da API
+Atualmente, a API ainda precisa ser documentada utilizando **Swagger/OpenAPI**.
+
+## Testes
+A aplicação inclui testes unitários e de integração usando **Spring Boot Test**:
+```sh
+mvn test
+```
+
+---
+
+## Contato
+Caso tenha dúvidas ou sugestões, entre em contato via **[GitHub](https://github.com/immark007/gommer-system-restaurant)**.
+
+
