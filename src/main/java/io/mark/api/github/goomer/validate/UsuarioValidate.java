@@ -6,7 +6,6 @@ import io.mark.api.github.goomer.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -14,18 +13,19 @@ public class UsuarioValidate {
     private final UsuarioRepository usuarioRepository;
 
     public void validateEmailUser(Usuarios usuario) {
-        if(validateEmail(usuario)){
-            throw new UsuarioDuplicadoException("Esse usuario ja existe");
+        if (emailJaCadastrado(usuario)) {
+            throw new UsuarioDuplicadoException("Esse usuário já existe");
         }
     }
 
-    public boolean validateEmail(Usuarios usuario) {
-        Optional<Usuarios> usuarioOptional = usuarioRepository.findByEmail(usuario.getEmail());
+    private boolean emailJaCadastrado(Usuarios usuario) {
+        Usuarios usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());
 
-        if(usuario.getId() == null){
-            return usuarioOptional.isPresent();
+        if (usuarioExistente == null) {
+            return false;
         }
 
-        return usuario.getId().equals(usuarioOptional.get().getId()) && usuarioOptional.isPresent();
+        return usuario.getId() == null || !usuario.getId().equals(usuarioExistente.getId());
     }
+
 }
