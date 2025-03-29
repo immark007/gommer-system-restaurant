@@ -43,6 +43,13 @@ public class RestauranteController {
         return ResponseEntity.ok(atualizado);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> removerRestaurante(@PathVariable UUID id) {
+        restauranteService.deletarRestaurante(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/search")
     public ResponseEntity<Page<CreateRestauranteDTO>> search(
             @RequestParam(value = "nome", required = false) String nome,

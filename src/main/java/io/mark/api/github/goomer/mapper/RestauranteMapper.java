@@ -12,16 +12,14 @@ import org.mapstruct.factory.Mappers;
 public interface RestauranteMapper {
     RestauranteMapper INSTANCE = Mappers.getMapper(RestauranteMapper.class);
 
-    @Mapping(source = "usuario.id", target = "usuarioId")
-    @Mapping(source = "endereco", target = "endereco") // Adicionando o mapeamento do Endereco
+    @Mapping(source = "endereco", target = "endereco") // Mantém o mapeamento do endereço
     CreateRestauranteDTO toDTO(Restaurante restaurante);
 
-    @Mapping(source = "usuarioId", target = "usuario.id")
-    @Mapping(source = "endereco", target = "endereco") // Adicionando o mapeamento do Endereco
+    @Mapping(source = "endereco", target = "endereco") // Mantém o mapeamento do endereço
     Restaurante toEntity(CreateRestauranteDTO dto);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "usuario.id", source = "usuarioId", ignore = true)
-    @Mapping(source = "endereco", target = "endereco") // Adicionando o mapeamento do Endereco
+    @Mapping(source = "endereco", target = "endereco") // Mantém o mapeamento do endereço
     void updateRestauranteFromDto(UpdateRestauranteDTO dto, @MappingTarget Restaurante restaurante);
 }
+

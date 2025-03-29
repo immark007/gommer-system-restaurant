@@ -2,6 +2,7 @@ package io.mark.api.github.goomer.common;
 
 import io.mark.api.github.goomer.dto.ErroCampo;
 import io.mark.api.github.goomer.dto.ErroResposta;
+import io.mark.api.github.goomer.exceptions.AcessoNegadoException;
 import io.mark.api.github.goomer.exceptions.RestauranteDuplicadoException;
 import io.mark.api.github.goomer.exceptions.UsuarioDuplicadoException;
 import org.springframework.http.HttpStatus;
@@ -60,6 +61,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErroResposta handlerRestauranteDuplicadoException(RestauranteDuplicadoException exception){
         return ErroResposta.conflict(exception.getMessage());
+    }
+
+    @ExceptionHandler(AcessoNegadoException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErroResposta handlerAcessoNegadoException(AcessoNegadoException exception){
+        return ErroResposta.Forbidden(exception.getMessage());
     }
 
 
