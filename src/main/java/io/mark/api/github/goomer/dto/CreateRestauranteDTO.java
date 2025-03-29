@@ -16,8 +16,6 @@ public record CreateRestauranteDTO(
         EnderecoDTO endereco,
         @NotBlank(message = "O campo não pode ser vázio")
         String horarioFuncionamento,
-        @NotNull(message = "O campo não pode ser vázio")
-        UUID usuarioId,
         List<ProdutoDTO> produtos
 ) {
 }
