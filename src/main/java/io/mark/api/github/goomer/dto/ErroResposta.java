@@ -15,4 +15,9 @@ public record ErroResposta(String status, int codeStatus, String message, List<E
     public static ErroResposta BadRequest(String message){
         return new ErroResposta(HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value(), message, List.of());
     }
+
+    //FORBIDEN
+    public static ErroResposta Forbidden(String message){
+        return new ErroResposta(HttpStatus.FORBIDDEN.name(), HttpStatus.FORBIDDEN.value(), message, List.of());
+    }
 }
