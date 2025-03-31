@@ -2,9 +2,12 @@ package io.mark.api.github.goomer.service;
 
 import io.mark.api.github.goomer.controller.GenericController;
 import io.mark.api.github.goomer.dto.CreateUserDTO;
+import io.mark.api.github.goomer.exceptions.AcessoNegadoException;
+import io.mark.api.github.goomer.exceptions.UsuarioNaoEncontradoException;
 import io.mark.api.github.goomer.mapper.UsuarioMapper;
 import io.mark.api.github.goomer.model.Usuarios;
 import io.mark.api.github.goomer.repository.UsuarioRepository;
+import io.mark.api.github.goomer.security.SecurityService;
 import io.mark.api.github.goomer.validate.UsuarioValidate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,10 +33,12 @@ public class UsuarioService implements GenericController {
         return usuarioRepository.save(usuarios);
     }
 
-    public Usuarios deleteUsuario(UUID id) {
-        getUsuario(id).ifPresent(usuarioRepository::delete);
-        return usuarioRepository.findById(id).orElse(null);
+    public void deleteUsuario(UUID id) {
+      getUsuario(id).orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado"));
+
+      usuarioRepository.deleteById(id);
     }
+
 
     public Optional<Usuarios> getUsuario(UUID id) {
         return usuarioRepository.findById(id);
