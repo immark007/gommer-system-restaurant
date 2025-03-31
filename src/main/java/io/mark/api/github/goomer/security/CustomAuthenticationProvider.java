@@ -11,36 +11,37 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Component
+@RequiredArgsConstructor
 public class CustomAuthenticationProvider implements AuthenticationProvider {
+
     private final UsuarioService usuarioService;
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder encoder;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String login = authentication.getName();
-        String password = authentication.getCredentials() != null ? authentication.getCredentials().toString() : null;
-
-        if (password == null || password.isEmpty()) {
-            System.out.println("Senha não fornecida");
-            throw new UsernameNotFoundException("Senha não fornecida");
-        }
+        String senhaDigitada = authentication.getCredentials().toString();
 
         Usuarios usuarioEncontrado = usuarioService.obterPorEmail(login);
 
-        if (usuarioEncontrado == null) {
-            System.out.println("Usuário não encontrado: " + login);
-            throw new UsernameNotFoundException("Usuário não encontrado");
+        if(usuarioEncontrado == null){
+            throw getErroUsuarioNaoEncontrado();
         }
 
+        String senhaCriptografada = usuarioEncontrado.getSenha();
 
-        if (!passwordEncoder.matches(password, usuarioEncontrado.getSenha())) {
-            System.out.println("Senha incorreta para o usuário: " + login);
-            throw new UsernameNotFoundException("Senha incorreta");
+        boolean senhamBatem = encoder.matches(senhaDigitada, senhaCriptografada);
+
+        if(senhamBatem){
+            return new CustomAuthentication(usuarioEncontrado);
         }
 
-        System.out.println("Autenticação bem-sucedida para o usuário: " + login);
-        return new CustomAuthentication(usuarioEncontrado);
+        throw getErroUsuarioNaoEncontrado();
+    }
+
+    private UsernameNotFoundException getErroUsuarioNaoEncontrado() {
+        return new UsernameNotFoundException("Usuário e/ou senha incorretos!");
     }
 
     @Override

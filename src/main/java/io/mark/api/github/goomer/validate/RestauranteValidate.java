@@ -41,7 +41,7 @@ public class RestauranteValidate {
         Restaurante restauranteExistente = restauranteRepository.findById(id)
                     .orElseThrow(() -> new RestauranteNaoEncontradoException("Restaurante não encontrado"));
 
-        Usuarios usuarioAutenticado = securityService.autenticar();
+        Usuarios usuarioAutenticado = securityService.obterUsuarioLogado();
 
         if (!restauranteExistente.getUsuario().getId().equals(usuarioAutenticado.getId())) {
             throw new AcessoNegadoException("Você não tem permissão para gerenciar este restaurante");

@@ -38,7 +38,7 @@ public class RestauranteService {
 
     public Restaurante salvar(Restaurante restaurante) {
         restauranteValidate.validate(restaurante);
-        Usuarios usuario = securityService.autenticar();
+        Usuarios usuario = securityService.obterUsuarioLogado();
         restaurante.setUsuario(usuario);
         return restauranteRepository.save(restaurante);
     }
@@ -46,11 +46,6 @@ public class RestauranteService {
     public Restaurante buscarPorId(UUID id) {
         return restauranteRepository.findById(id)
                 .orElseThrow(() -> new RestauranteNaoEncontradoException("Restaurante não encontrado"));
-    }
-
-    public void removeRestaurante(UUID id) {
-        buscarPorId(id);
-        restauranteRepository.deleteById(id);
     }
 
 
